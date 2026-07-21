@@ -25,3 +25,17 @@
 | Observed Failure | The application displays "JSON Parse Error: Unexpected character in number: -". |
 | Impact | Mobile users are unable to use the password reset feature. |
 | Environment | Mobile application |
+
+## Failure Mode 3 – Administrator Can Delete Own Account
+
+| Field | Description |
+|---|---|
+| Failure Mode ID | FM-03 |
+| Failure Mode | Administrator account can delete itself. |
+| Related Requirement | FR11 |
+| Description | The system allows an administrator to delete their own account even though this action should be prohibited. |
+| Steps to Reproduce | 1. Log in using an administrator account (admin@eshop.com / Admin123!).<br>2. Navigate to "Người Dùng".<br>3. Click "Xóa" on the currently logged-in administrator account. |
+| Expected Result | The system prevents administrators from deleting their own account. |
+| Observed Failure | The administrator account is deleted successfully. |
+| Impact | The application may lose administrative access or allow accidental removal of privileged accounts. |
+| Environment | Web application |
