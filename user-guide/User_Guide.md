@@ -734,6 +734,10 @@ The real, working login flow used for the Stage 4 demo (with actual `appId`
 and Vietnamese UI labels, rather than the `TODO_*` placeholders above) is
 committed at [`maestro/eshop/01_login.yaml`](../maestro/eshop/01_login.yaml).
 
+![EShop login flow passing on Nexus 5X](assets/screenshots/maestro-08-eshop-login-pass.png)
+
+*Figure 12. All 13 steps of `01_login.yaml` passing end-to-end on the Nexus 5X API 34 emulator, total run time 1:28.*
+
 ## 3.6 Result table
 
 | Metric | Appium | Maestro Studio |

@@ -16,6 +16,10 @@ Demo video: https://www.youtube.com/watch?v=7_-sTxwdQvI
 | Impact | High — the codebase provides no alternative path to the Login, Cart, or Profile screens other than this navigation bar (confirmed by inspecting every `setView("login")` / `setView("cart")` call site), so this defect fully blocks those flows on the affected device profile. On a Nexus 5X (no camera cutout, ~63px status bar), the same element remains tappable — the real-world severity is device-dependent. |
 | Environment | Mobile application (Maestro Studio) — Pixel 8 / API 34 emulator, Expo Go (`host.exp.exponent`), `App.js` (`SafeAreaView` import, `edgeToEdgeEnabled` in `app.json`) |
 
+![EShop navbar on Pixel 8](../user-guide/assets/screenshots/maestro-09-pixel8-navbar.png)
+
+*The affected navbar (`"Đăng nhập"` / `"Giỏ (0)"`) as rendered on the Pixel 8 profile. The tap failure itself has no visual signature in a static screenshot — it is a static-looking, correctly-rendered navbar that simply does not respond to touch — which is why the verification relied on `adb input tap` plus `adb shell dumpsys window displays` rather than a screenshot alone (see Observed Failure above).*
+
 ## Failure Mode 2 – Inconsistent UI Labels Across Screens
 
 | Field | Description |
