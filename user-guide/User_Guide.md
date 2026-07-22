@@ -108,8 +108,8 @@ The team successfully ran a Contacts smoke test in Maestro Studio and recorded b
 | Appium server | Local server screenshot exists | Verified |
 | Appium Calculator script | Script prepared in report | Prepared; rerun and attach final evidence |
 | EShop Appium test | Requires final APK/build and locators | TODO |
-| EShop Maestro test | Requires final app ID and element selectors | TODO |
-| AI-assisted Maestro feature | Must be demonstrated and audited | TODO |
+| EShop Maestro test | Login flow verified against `host.exp.exponent`; genuine navigation-bar bug found (see `bug-report/bug-report.md`) | Verified |
+| AI-assisted Maestro feature | MaestroGPT flow generated, audited for incorrect `appId`/labels/syntax, corrected, and re-run (see `bug-report/bug-report.md`) | Verified |
 
 ## 1.5 EShop information
 
