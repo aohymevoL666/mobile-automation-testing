@@ -98,22 +98,46 @@ tappable — showing that this defect's real-world severity is device-dependent.
 
 I asked MaestroGPT (Maestro Studio's built-in AI) to generate a flow from the
 same natural-language description (log in, then open the product list), and ran
-the raw output **as-is** to expose the mistakes. Asking the identical prompt
-more than once produced different wrong answers each time:
-- one attempt used a placeholder `appId` (`com.example.eshop`) instead of the
-  real one, and issued a tap on `"Product List"` — a label that does not exist
-  anywhere in the Vietnamese UI (the real screen is titled
-  "Danh sách sản phẩm");
-- another attempt produced entirely invalid Maestro syntax (`steps:`, `tap:`,
-  `type: ... into: ...`, `waitForElement:` — none of these are real Maestro
-  commands; the real ones are `appId:`, `tapOn:`, `inputText:`,
-  `assertVisible:`).
+the raw output **as-is** to expose the mistakes, then hand-corrected it. Both
+files are committed as evidence:
+[`maestro/eshop/03_ai_generated_before.yaml`](../maestro/eshop/03_ai_generated_before.yaml)
+(raw AI output) and
+[`maestro/eshop/03_ai_generated_after.yaml`](../maestro/eshop/03_ai_generated_after.yaml)
+(corrected).
 
-I corrected the `appId` and labels against the real app (read from source,
-verified via `adb`), re-ran the corrected flow, and it passed. Both a raw AI
-failure and the fix are shown in the demo video — the point being that
-AI-generated flows must be verified against the actual application, and that
-the same prompt can yield different, differently-wrong output on repeated asks.
+The raw output was wrong in several concrete ways:
+- **Wrong `appId`** — placeholder `com.example.eshop` instead of the real
+  `host.exp.exponent` (the app runs through Expo Go, not a dedicated package).
+- **Skips the Expo Go project-selection screen** — no `tapOn: "frontend-mobile"`
+  after `launchApp`, so the flow would never actually reach the EShop app;
+  it would stay stuck on Expo Go's own "Recently opened" screen.
+- **`inputText` called with no preceding `tapOn`** on the Email/Mật khẩu
+  fields — Maestro types into whatever is currently focused, so this either
+  fails or types into the wrong element.
+- **`pressKey: "Enter"` used to submit, hedged with an "(if necessary)"
+  comment** — a sign the AI itself was unsure this would work — instead of
+  tapping the real "Sign In" button.
+- **Final tap on `"Product List"`** — a label that does not exist anywhere in
+  the Vietnamese UI (the real screen is titled "Danh sách sản phẩm").
+- **No `assertVisible` anywhere**, so the flow can't actually confirm the
+  login succeeded before declaring the scenario done.
+
+The corrected version fixes all of the above: real `appId`, the
+`frontend-mobile` tap, a `tapOn` before each `inputText`, `waitForAnimationToEnd`,
+and `assertVisible` checkpoints against the real screen titles — converging on
+the same flow as the working `01_login.yaml`.
+
+Separately, asking the identical prompt again on another occasion produced a
+second, differently-wrong result: entirely invalid Maestro syntax (`steps:`,
+`tap:`, `type: ... into: ...`, `waitForElement:` — none of these are real
+Maestro commands; the real ones are `appId:`, `tapOn:`, `inputText:`,
+`assertVisible:`). This second attempt was not saved as a file, but was
+observed and documented at the time.
+
+Both the raw AI failure and the fix are shown in the demo video — the point
+being that AI-generated flows must be verified against the actual application
+before use, and that the same prompt can yield different, differently-wrong
+output on repeated asks.
 
 ## V. Results
 
