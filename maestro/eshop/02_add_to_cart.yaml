@@ -1,0 +1,8 @@
+appId: host.exp.exponent
+---
+- tapOn:
+    text: "Thêm vào giỏ"
+    index: 0
+- tapOn: "OK"
+- tapOn: "Giỏ (1)"
+- assertVisible: "Giỏ Hàng"
