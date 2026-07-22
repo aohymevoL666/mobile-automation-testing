@@ -730,6 +730,10 @@ Run the flow in Maestro Studio and capture:
 - The pass/fail result
 - Total execution time
 
+The real, working login flow used for the Stage 4 demo (with actual `appId`
+and Vietnamese UI labels, rather than the `TODO_*` placeholders above) is
+committed at [`maestro/eshop/01_login.yaml`](../maestro/eshop/01_login.yaml).
+
 ## 3.6 Result table
 
 | Metric | Appium | Maestro Studio |
