@@ -124,6 +124,8 @@ and correction before use. The automation is genuine Maestro end-to-end (YAML
 flow → Maestro CLI/Studio → Expo Go → `host.exp.exponent` on a real emulator).
 Every action in the video is real and unstaged.
 
+**Demo video:** https://www.youtube.com/watch?v=7_-sTxwdQvI
+
 ---
 
 ## Summary
