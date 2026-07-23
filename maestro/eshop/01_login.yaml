@@ -1,0 +1,15 @@
+appId: host.exp.exponent
+---
+- launchApp
+- tapOn: "frontend-mobile"
+- assertVisible: "Đăng nhập"
+- waitForAnimationToEnd
+- tapOn: "Đăng nhập"
+- assertVisible: "Đăng Nhập"
+- tapOn: "Email"
+- inputText: "test@eshop.com"
+- tapOn: "Mật khẩu"
+- inputText: "Test1234!"
+- hideKeyboard
+- tapOn: "Sign In"
+- assertVisible: "Danh sách sản phẩm"

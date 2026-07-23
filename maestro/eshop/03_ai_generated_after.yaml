@@ -1,0 +1,20 @@
+# Maestro Flow Script to login and navigate to product list in EShop app
+appId: host.exp.exponent  # Replace with the actual app ID
+
+---
+# Launch the EShop application
+- launchApp
+- tapOn: "frontend-mobile"
+- assertVisible: "Đăng nhập"
+- waitForAnimationToEnd
+- tapOn: "Đăng nhập"
+- assertVisible: "Đăng Nhập"
+- tapOn: "Email"
+# Input email and password to login
+- inputText: "test@eshop.com"  # Input email
+- pressKey: "Enter"  # Submit email (if necessary)
+- tapOn: "Mật khẩu"
+- inputText: "Test1234!"  # Input password
+- pressKey: "Enter"  # Submit password (if necessary)
+- tapOn: "Sign In"
+- assertVisible: "Danh sách sản phẩm"

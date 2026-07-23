@@ -1,0 +1,16 @@
+# Maestro Flow Script to login and navigate to product list in EShop app
+appId: com.example.eshop  # Replace with the actual app ID
+
+---
+# Launch the EShop application
+- launchApp:
+    clearState: true  # Clear app state for consistent tests
+
+# Input email and password to login
+- inputText: "test@eshop.com"  # Input email
+- pressKey: "Enter"  # Submit email (if necessary)
+- inputText: "Test1234!"  # Input password
+- pressKey: "Enter"  # Submit password (if necessary)
+
+# Navigate to the product list
+- tapOn: "Product List"  # Tap on the product list button or link
