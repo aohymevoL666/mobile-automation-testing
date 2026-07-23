@@ -1,0 +1,35 @@
+﻿
+> eshop-appium-tests@1.0.0 test:eshop
+> node tests/eshop_login_search.js
+
+node.exe : Error: element ("android=new UiSelector().text("Thêm vào giỏ hàng")") still not displayed after 20000ms
+At line:1 char:1
++ & "D:\Nodejs/node.exe" "C:\Users\ACER\AppData\Roaming\npm/node_module ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Error: element ...d after 20000ms:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    at file:///D:/HCMUS/N%C4%83m%203/K%C3%AC%203/Ki%E1%BB%83m%20th%E1%BB%AD%20ph%E1%BA%A7n%20m%E1%BB%81m/Seminar/mobile
+-automation-testing/appium-tests/node_modules/webdriverio/build/node.js:6216:15
+    at async Element.wrapCommandFn (file:///D:/HCMUS/N%C4%83m%203/K%C3%AC%203/Ki%E1%BB%83m%20th%E1%BB%AD%20ph%E1%BA%A7n
+%20m%E1%BB%81m/Seminar/mobile-automation-testing/appium-tests/node_modules/webdriverio/node_modules/@wdio/utils/build/i
+ndex.js:982:23)
+    at async Element.elementErrorHandlerCallbackFn (file:///D:/HCMUS/N%C4%83m%203/K%C3%AC%203/Ki%E1%BB%83m%20th%E1%BB%A
+D%20ph%E1%BA%A7n%20m%E1%BB%81m/Seminar/mobile-automation-testing/appium-tests/node_modules/webdriverio/build/node.js:98
+01:24)
+    at async Element.wrapCommandFn (file:///D:/HCMUS/N%C4%83m%203/K%C3%AC%203/Ki%E1%BB%83m%20th%E1%BB%AD%20ph%E1%BA%A7n
+%20m%E1%BB%81m/Seminar/mobile-automation-testing/appium-tests/node_modules/webdriverio/node_modules/@wdio/utils/build/i
+ndex.js:982:23)
+    at async Element.wrapCommandFn (file:///D:/HCMUS/N%C4%83m%203/K%C3%AC%203/Ki%E1%BB%83m%20th%E1%BB%AD%20ph%E1%BA%A7n
+%20m%E1%BB%81m/Seminar/mobile-automation-testing/appium-tests/node_modules/webdriverio/node_modules/@wdio/utils/build/i
+ndex.js:982:23)
+    at async Element.elementErrorHandlerCallbackFn (file:///D:/HCMUS/N%C4%83m%203/K%C3%AC%203/Ki%E1%BB%83m%20th%E1%BB%A
+D%20ph%E1%BA%A7n%20m%E1%BB%81m/Seminar/mobile-automation-testing/appium-tests/node_modules/webdriverio/build/node.js:98
+01:24)
+    at async Element.wrapCommandFn (file:///D:/HCMUS/N%C4%83m%203/K%C3%AC%203/Ki%E1%BB%83m%20th%E1%BB%AD%20ph%E1%BA%A7n
+%20m%E1%BB%81m/Seminar/mobile-automation-testing/appium-tests/node_modules/webdriverio/node_modules/@wdio/utils/build/i
+ndex.js:982:23)
+    at async HomePage.addToCartFromDetail (D:\HCMUS\Năm 3\Kì 3\Kiểm thử phần 
+mềm\Seminar\mobile-automation-testing\appium-tests\pages\HomePage.js:59:5)
+    at async runTest (D:\HCMUS\Năm 3\Kì 3\Kiểm thử phần 
+mềm\Seminar\mobile-automation-testing\appium-tests\tests\eshop_login_search.js:111:5)

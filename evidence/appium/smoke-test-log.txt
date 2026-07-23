@@ -1,0 +1,6 @@
+﻿
+> eshop-appium-tests@1.0.0 test:smoke
+> node tests/test_calculator.js
+
+PASS: com.android.settings application opened.
+Runtime: 52.5s

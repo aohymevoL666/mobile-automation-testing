@@ -106,8 +106,8 @@ The team successfully ran a Contacts smoke test in Maestro Studio and recorded b
 | Appium local package | Installed inside project | Verified |
 | UiAutomator2 | Driver `8.0.1` listed as installed | Verified |
 | Appium server | Local server screenshot exists | Verified |
-| Appium Calculator script | Script prepared in report | Prepared; rerun and attach final evidence |
-| EShop Appium test | Requires final APK/build and locators | TODO |
+| Appium smoke script | Executed 23 Jul 2026 on Pixel 8 AVD — PASS (`evidence/appium/smoke-test-log.txt`) | Verified |
+| EShop Appium test | Real locators extracted from `App.js`; run pending build install | In progress |
 | EShop Maestro test | Requires final app ID and element selectors | TODO |
 | AI-assisted Maestro feature | Must be demonstrated and audited | TODO |
 
@@ -392,10 +392,25 @@ With the emulator already running, Maestro Studio should detect `emulator-5554` 
 
 ## 2.8 Clone and run the React Native EShop
 
+The EShop SUT is vendored inside the team repository under `src/eshop-sut`
+(upstream: https://github.com/ttbhanh/eshop-sut).
+
 ```powershell
-git clone TODO_REPOSITORY_URL
-cd TODO_PROJECT_FOLDER
+git clone https://github.com/aohymevoL666/mobile-automation-testing
+cd mobile-automation-testing\src\eshop-sut\frontend-mobile
 npm install
+```
+
+The backend must also run, and the emulator must be able to reach it:
+
+```powershell
+cd ..\backend
+npm install
+node database.js   # first run only — seeds the SQLite database
+node server.js     # keep running on http://localhost:3000
+
+adb reverse tcp:3000 tcp:3000   # backend
+adb reverse tcp:8081 tcp:8081   # Metro bundler
 ```
 
 Use the correct command for the project.
@@ -435,12 +450,15 @@ adb shell dumpsys activity activities |
   Select-String "mResumedActivity"
 ```
 
-Record:
+Recorded values for the EShop dev build (`expo run:android`, package declared
+in `frontend-mobile/app.json`):
 
 ```text
-APP_PACKAGE=TODO
-APP_ACTIVITY=TODO
+APP_PACKAGE=com.eshop.mobile
+APP_ACTIVITY=.MainActivity
 ```
+
+The fully qualified activity is `com.eshop.mobile.MainActivity`.
 
 ## 2.10 Expose stable identifiers in React Native
 
@@ -462,19 +480,26 @@ Prefer stable accessibility identifiers instead of coordinates or long XPath exp
 </Pressable>
 ```
 
-Create an element map:
+Element map of the current EShop build (`frontend-mobile/App.js`). Only the
+cart-related elements expose real `testID`s today; RN surfaces a `testID` as
+the `resource-id` attribute in the UiAutomator2 hierarchy. All other elements
+are located by visible text or by `EditText` order, because RN renders `Text`
+as `android.widget.TextView` and `TextInput` as `android.widget.EditText`:
 
-| Screen | Element | Test identifier |
+| Screen | Element | Locator used (UiAutomator2) |
 |---|---|---|
-| Login | Email field | `TODO` |
-| Login | Password field | `TODO` |
-| Login | Login button | `TODO` |
-| Home | Search field | `TODO` |
-| Search | First result | `TODO` |
-| Product | Add-to-cart button | `TODO` |
-| Cart | Cart content | `TODO` |
+| Login | Email field | `className("android.widget.EditText").instance(0)` — no testID; placeholder `Email` |
+| Login | Password field | `className("android.widget.EditText").instance(1)` — no testID; placeholder `Mật khẩu` |
+| Login | Login button | `text("Sign In")` |
+| Home | Search field | `className("android.widget.EditText").instance(0)` — placeholder `Tìm kiếm...` |
+| Search | First result | `text("Xem chi tiết").instance(0)`; assert product name via `textContains(...)` |
+| Product card | Add-to-cart button | testID `add-to-cart-<productId>` → `resourceIdMatches(".*add-to-cart-.*")` |
+| Product detail | Add-to-cart button | `text("Thêm vào giỏ hàng")` |
+| Navbar | Cart link | testID `cart-nav` → `resourceIdMatches(".*cart-nav")` |
+| Cart | Cart row | testID `cart-item-<productId>` |
+| Cart | Quantity field | testID `cart-quantity-<productId>` |
 
-Use Appium Inspector or Maestro Studio's screen-inspection feature to confirm the identifiers exposed by the built application.
+Use Appium Inspector or Maestro Studio's screen-inspection feature to confirm the identifiers exposed by the built application. Adding `testID`s to the login and search elements (as in the snippet above) remains a recommended SUT improvement; the current suite works with text/order-based locators instead.
 
 ---
 
@@ -535,7 +560,9 @@ async function runTest() {
 
   try {
     driver = await remote(options);
-    console.log("PASS: Calculator application opened.");
+    console.log(
+      `PASS: ${capabilities["appium:appPackage"]} application opened.`,
+    );
   } catch (error) {
     console.error("FAIL: Appium smoke test failed.", error);
     process.exitCode = 1;
@@ -563,7 +590,23 @@ cd appium-tests
 npm run test:smoke
 ```
 
-> The source progress report contained this test concept but also noted that emulator creation was still pending at that moment. The team must rerun it and insert final pass evidence before describing it as a completed result.
+> **Executed result (23 July 2026, Pixel 8 AVD, Android 14 / API 34 Google Play x86_64, WHPX):**
+> the Google Calculator is not preinstalled on this system image, so the smoke
+> test was executed against the preinstalled Settings app using the environment
+> overrides supported by the script:
+>
+> ```powershell
+> $env:APP_PACKAGE = "com.android.settings"
+> $env:APP_ACTIVITY = ".Settings"
+> npm run test:smoke
+> # -> PASS: com.android.settings application opened.  (runtime 52.5 s, first
+> #    run includes the on-device UiAutomator2 server installation)
+> ```
+>
+> Evidence: `evidence/appium/smoke-test-log.txt` and
+> `evidence/appium/smoke-test-screen.png`. The purpose of this smoke test —
+> proving the WebdriverIO → Appium → UiAutomator2 → emulator chain end to end —
+> is met regardless of which preinstalled application is opened.
 
 ## 3.3 First EShop end-to-end scenario
 
@@ -587,81 +630,92 @@ The Stage S4 first test should remain within 15 steps:
 
 ## 3.4 Appium EShop template
 
-Create `appium-tests/tests/eshop_login_search.js`:
+Final version of `appium-tests/tests/eshop_login_search.js`. It uses the Page
+Objects from §4.4 (`appium-tests/pages/`) and the real locators from §2.10:
 
 ```javascript
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
 const path = require("node:path");
 const { remote } = require("webdriverio");
 
-const config = {
-  appPackage: process.env.APP_PACKAGE,
-  appActivity: process.env.APP_ACTIVITY,
-  email: process.env.TEST_EMAIL,
-  password: process.env.TEST_PASSWORD,
-  searchTerm: process.env.SEARCH_TERM || "backpack"
-};
+const LoginPage = require("../pages/LoginPage");
+const HomePage = require("../pages/HomePage");
+const CartPage = require("../pages/CartPage");
 
-for (const [key, value] of Object.entries(config)) {
-  if (!value) {
-    throw new Error(`Missing required configuration: ${key}`);
-  }
-}
+const config = {
+  appPackage: process.env.APP_PACKAGE || "com.eshop.mobile",
+  appActivity: process.env.APP_ACTIVITY || ".MainActivity",
+  email: process.env.TEST_EMAIL || "test@eshop.com",
+  password: process.env.TEST_PASSWORD || "Test1234!",
+  searchTerm: process.env.SEARCH_TERM || "iPhone",
+  // Seeded product: id 1 = "iPhone 15 Pro Max" (backend/database.js).
+  productId: process.env.PRODUCT_ID || "1",
+  productName: process.env.PRODUCT_NAME || "iPhone 15 Pro Max",
+};
 
 async function runTest() {
   const driver = await remote({
     hostname: "127.0.0.1",
     port: 4723,
     path: "/",
-    logLevel: "info",
+    logLevel: "warn",
     capabilities: {
       platformName: "Android",
       "appium:automationName": "UiAutomator2",
       "appium:deviceName": "Android Emulator",
       "appium:appPackage": config.appPackage,
       "appium:appActivity": config.appActivity,
-      "appium:noReset": false,
-      "appium:newCommandTimeout": 120
-    }
+      // Cart and session live in component state, so a relaunch (below) is a
+      // full reset; reinstalling via noReset:false is unnecessary.
+      "appium:noReset": true,
+      "appium:newCommandTimeout": 120,
+    },
   });
 
+  const artifactsDir = path.resolve(__dirname, "../artifacts");
+  fs.mkdirSync(artifactsDir, { recursive: true });
+
+  const login = new LoginPage(driver);
+  const home = new HomePage(driver);
+  const cart = new CartPage(driver);
+
   try {
-    const email = await driver.$("~TODO_EMAIL_ID");
-    await email.waitForDisplayed({ timeout: 15000 });
-    await email.setValue(config.email);
+    // Clean state: relaunch clears in-memory cart and session.
+    await driver.execute("mobile: terminateApp", { appId: config.appPackage });
+    await driver.execute("mobile: activateApp", { appId: config.appPackage });
+    await home.waitLoaded();
 
-    const password = await driver.$("~TODO_PASSWORD_ID");
-    await password.setValue(config.password);
+    // Login
+    await login.open();
+    await login.login(config.email, config.password);
+    await home.waitLoaded();
 
-    await (await driver.$("~TODO_LOGIN_BUTTON_ID")).click();
+    // Search
+    await home.search(config.searchTerm);
+    const result = await home.productByName(config.productName);
+    await result.waitForDisplayed({ timeout: 20000 });
 
-    const home = await driver.$("~TODO_HOME_ID");
-    await home.waitForDisplayed({ timeout: 15000 });
-    assert.equal(await home.isDisplayed(), true);
+    // Product detail -> add to cart
+    await home.openFirstResult();
+    await home.addToCartFromDetail();
 
-    const search = await driver.$("~TODO_SEARCH_ID");
-    await search.setValue(config.searchTerm);
+    // Cart verification: right product, quantity 1.
+    await cart.open();
+    const item = await cart.cartItem(config.productId);
+    await item.waitForDisplayed({ timeout: 20000 });
+    assert.equal(await item.isDisplayed(), true);
 
-    const result = await driver.$("~TODO_FIRST_RESULT_ID");
-    await result.waitForDisplayed({ timeout: 15000 });
-    await result.click();
+    const name = await cart.itemByName(config.productName);
+    assert.equal(await name.isDisplayed(), true);
 
-    await (await driver.$("~TODO_ADD_TO_CART_ID")).click();
-    await (await driver.$("~TODO_CART_ID")).click();
+    const quantity = await cart.quantityInput(config.productId);
+    assert.equal(await quantity.getText(), "1");
 
-    const cartItem = await driver.$("~TODO_CART_ITEM_ID");
-    await cartItem.waitForDisplayed({ timeout: 15000 });
-    assert.equal(await cartItem.isDisplayed(), true);
-
-    await driver.saveScreenshot(
-      path.resolve(__dirname, "../artifacts/eshop-flow-pass.png")
-    );
-
+    await driver.saveScreenshot(path.join(artifactsDir, "eshop-flow-pass.png"));
     console.log("PASS: EShop login, search, and cart flow.");
   } catch (error) {
-    await driver.saveScreenshot(
-      path.resolve(__dirname, "../artifacts/eshop-flow-fail.png")
-    );
+    await driver.saveScreenshot(path.join(artifactsDir, "eshop-flow-fail.png"));
     throw error;
   } finally {
     await driver.deleteSession();
@@ -674,7 +728,9 @@ runTest().catch((error) => {
 });
 ```
 
-Create a local `.env` or set environment variables without committing real credentials.
+Credentials above are the seeded demo accounts that ship with the SUT
+(`src/eshop-sut/README.md`); no private credentials are committed. Use
+environment variables to override any value.
 
 ## 3.5 Maestro Studio EShop template
 
@@ -732,15 +788,28 @@ Run the flow in Maestro Studio and capture:
 
 ## 3.6 Result table
 
+Measured 23 July 2026 on the Pixel 8 AVD (Android 14 / API 34, Google Play
+x86_64, WHPX acceleration), `com.eshop.mobile` dev build, backend on
+`localhost:3000`. Maestro-side figures are the other team member's to record.
+
 | Metric | Appium | Maestro Studio |
 |---|---:|---:|
-| Setup time | `TODO` | `TODO` |
-| Authoring time | `TODO` | `TODO` |
-| Non-empty test lines | `TODO` | `TODO` |
-| Median runtime over 5 runs | `TODO` | `TODO` |
-| Unexpected failures / total runs | `TODO` | `TODO` |
-| Main setup issue | `TODO` | `TODO` |
-| Main maintenance issue | `TODO` | `TODO` |
+| Setup time | ~3–4 h (dominated by two one-off environment blockers, see below) | `TODO` |
+| Authoring time | ~30–40 min for the 4 test/page-object files (247 non-empty lines) | `TODO` |
+| Non-empty test lines | 247 (EShop suite: `eshop_login_search.js` + 3 Page Objects) / 38 (Calculator smoke test) | `TODO` |
+| Median runtime over 5 runs | 42.8 s (raw: 40.7, 40.8, 42.8, 58.5, 59.9 s) | `TODO` |
+| Unexpected failures / total runs | 0 / 5 (0% flake rate) | `TODO` |
+| Main setup issue | Two genuine defects in the SUT itself blocked every run until fixed — see §5 | `TODO` |
+| Main maintenance issue | UI-change repair (§4.10): ~3 min end-to-end for a one-line locator fix in one file | `TODO` |
+
+The setup time is not representative of a typical Appium learning curve — most
+of it went into diagnosing two SUT bugs that had nothing to do with Appium
+itself: the Vietnamese/Unicode project path breaking the native (CMake/ninja)
+Android build, an API-path mismatch that left every mobile screen non-functional
+(BUG-04), and a header that rendered untappable under the status bar
+(BUG-05). Once those were fixed, writing and stabilizing the actual Appium
+Page Objects took well under an hour. Full details in §5 and
+`bug-report/bug-report.md`.
 
 ---
 
@@ -793,28 +862,48 @@ A long XPath may break after a harmless UI layout change.
 
 ## 4.4 Page Object pattern
 
+The suite implements three Page Objects in `appium-tests/pages/`:
+`LoginPage.js`, `HomePage.js`, and `CartPage.js`. The real `LoginPage`:
+
 ```javascript
+// appium-tests/pages/LoginPage.js
 class LoginPage {
   constructor(driver) {
     this.driver = driver;
   }
 
   get emailInput() {
-    return this.driver.$("~TODO_EMAIL_ID");
+    return this.driver.$(
+      'android=new UiSelector().className("android.widget.EditText").instance(0)',
+    );
   }
 
   get passwordInput() {
-    return this.driver.$("~TODO_PASSWORD_ID");
+    return this.driver.$(
+      'android=new UiSelector().className("android.widget.EditText").instance(1)',
+    );
   }
 
-  get loginButton() {
-    return this.driver.$("~TODO_LOGIN_BUTTON_ID");
+  get signInButton() {
+    return this.driver.$('android=new UiSelector().text("Sign In")');
+  }
+
+  // Header link shown while logged out; navigates Home -> Login.
+  get navLoginLink() {
+    return this.driver.$('android=new UiSelector().text("Đăng nhập")');
+  }
+
+  async open() {
+    const link = await this.navLoginLink;
+    await link.waitForDisplayed({ timeout: 20000 });
+    await link.click();
+    await (await this.emailInput).waitForDisplayed({ timeout: 20000 });
   }
 
   async login(email, password) {
     await (await this.emailInput).setValue(email);
     await (await this.passwordInput).setValue(password);
-    await (await this.loginButton).click();
+    await (await this.signInButton).click();
   }
 }
 
@@ -838,7 +927,9 @@ await driver.pause(5000);
 Prefer:
 
 ```javascript
-const home = await driver.$("~TODO_HOME_ID");
+const home = await driver.$(
+  'android=new UiSelector().textContains("Danh sách sản phẩm")',
+);
 await home.waitForDisplayed({ timeout: 15000 });
 ```
 
@@ -954,6 +1045,30 @@ Measure:
 - Repair time
 - Whether the test still verifies the same intent
 
+> **Executed (23 July 2026).** Ran a text-label variant of Change B on the
+> product-detail "Add to cart" button: `"Thêm vào giỏ hàng"` →
+> `"Thêm sản phẩm"` (`App.js`, live-edited in the Metro-served copy — no
+> rebuild needed since it's JS, not a resource ID).
+>
+> - **Detection:** `npm run test:eshop` failed immediately with
+>   `element ("android=new UiSelector().text("Thêm vào giỏ hàng")") still not
+>   displayed after 20000ms`, pointing straight at
+>   `HomePage.js:59` (`detailAddToCartButton`) — no ambiguity about which
+>   locator broke. Failure screenshot:
+>   `evidence/appium/eshop-flow-fail.png` (button visibly reads "Thêm sản
+>   phẩm").
+> - **Repair:** one line changed in one file
+>   (`pages/HomePage.js`'s `detailAddToCartButton` getter) — exactly the
+>   benefit described in §4.4: the Page Object confines the fix to a single
+>   place even though the button is used from one E2E flow.
+> - **Repair time:** ~3 minutes from breaking the UI text to a confirmed
+>   green rerun (`evidence/appium/ui-change-failure.log` →
+>   `ui-change-repaired.log`), most of it re-running the full login → search →
+>   cart flow rather than editing.
+> - **Files affected:** 1 (`pages/HomePage.js`).
+> - **Test intent preserved:** yes — same assertions (cart shows the right
+>   product, name, and quantity) ran unchanged after the locator fix.
+
 ### Change C — delayed search response
 
 Add a controlled delay before product results appear.
@@ -1001,7 +1116,47 @@ Collect:
 
 # 5. Failure Modes
 
-Replace the examples below with evidence from real team experiments before submission.
+## 5.0 Real failures found while automating the EShop app (23 July 2026)
+
+These were discovered running this suite, not invented for the report. Full
+write-ups: `bug-report/bug-report.md` (BUG-04, BUG-05).
+
+**A defect the SUT's own backend, not Appium.** Every mobile screen calls
+`${API_URL}/products`, `/login`, etc. with `API_URL = "http://10.0.2.2:3000"`,
+but every backend route lives under `/api/...`. Every request 404s, and the
+app swallows the failure silently (products render as an empty list, no
+error banner) because the error-detection code only checks for `<h1>` in the
+response body, and Express's default 404 page uses `<pre>`. Nothing was
+observably "broken" on screen — it just showed zero products, which itself is
+a great example of a weak/absent negative-path assertion (§5.2) turning a
+total API outage into a quiet empty state. Patched locally
+(`API_URL` + `/api`) to unblock the demo; see BUG-04.
+
+**A defect that makes login/cart physically untappable on Android.** The
+header (Login / Cart links) renders under the transparent status bar because
+`App.js` uses React Native's core `SafeAreaView` (iOS-only behaviour) together
+with `edgeToEdgeEnabled: true`. Confirmed with three independent input paths —
+Appium W3C Actions, `mobile: clickGesture`, and a raw `adb shell input tap` at
+the exact `uiautomator dump` bounds — that a tap in that band never reaches
+the app. This is not an automation artifact: a real finger would fail the
+same way. Patched locally with `paddingTop:
+14 + (RNStatusBar.currentHeight || 0)`; see BUG-05 for the proper
+`react-native-safe-area-context` fix.
+
+**Expo Dev Client chrome, not app UI.** A cold `app start` always shows the
+Dev Client's own server-picker screen, then a one-time "developer menu"
+bottom sheet on top of the freshly loaded bundle, before the actual EShop UI
+is interactive. `eshop_login_search.js`'s `ensureDevClientLoaded()` polls for
+the real home-screen header and only sends BACK when the dev-menu marker
+text is confirmed present — an earlier version pressed BACK unconditionally
+and ended up backgrounding the whole app. Worth remembering for anyone
+automating an Expo dev build rather than a signed release APK.
+
+**RN `Alert.alert()` isn't a W3C alert.** The add-to-cart success dialog
+(`Alert.alert("Thành công", "Đã thêm vào giỏ hàng")`) is visibly a native
+`AlertDialog` (confirmed via screenshot) but Appium's `acceptAlert()` reports
+"no alert is present". Dismissing it by locating and tapping its "OK"
+`TextView` like any other element works reliably.
 
 ## 5.1 Unstable locator causes a false failure
 
@@ -1291,11 +1446,13 @@ Then identify the package and activity of that build rather than automating the 
 - Android Platform-Tools: https://developer.android.com/tools/releases/platform-tools
 - React Native environment setup: https://reactnative.dev/docs/set-up-your-environment
 
-Add the official repository and setup documentation of the selected EShop:
+Official repository and setup documentation of the selected EShop:
 
 ```text
-TODO: EShop repository
-TODO: EShop setup guide
+EShop repository:  https://github.com/ttbhanh/eshop-sut
+                   (vendored in this repo at src/eshop-sut)
+EShop setup guide: src/eshop-sut/setup_guide.md
+EShop spec (SRS):  src/eshop-sut/README.md
 ```
 
 > AI use must be documented in the AI Audit and Disclosure. AI output is not an original technical source.
@@ -1306,41 +1463,48 @@ TODO: EShop setup guide
 
 | ID | Scenario | Expected result | Appium | Maestro |
 |---|---|---|---|---|
-| TC-01 | Launch EShop | Initial screen appears | TODO | TODO |
-| TC-02 | Valid login | Home screen appears | TODO | TODO |
-| TC-03 | Invalid login | Error shown; user remains logged out | TODO | TODO |
-| TC-04 | Search product | Matching result appears | TODO | TODO |
-| TC-05 | Open product | Correct details appear | TODO | TODO |
-| TC-06 | Add to cart | Correct item appears in cart | TODO | TODO |
-| TC-07 | Update quantity | Quantity and subtotal change | TODO | TODO |
-| TC-08 | Remove product | Product disappears | TODO | TODO |
-| TC-09 | Logout | Login screen appears | TODO | TODO |
+| TC-01 | Launch EShop | Initial screen appears | PASS | TODO |
+| TC-02 | Valid login | Home screen appears | PASS | TODO |
+| TC-03 | Invalid login | Error shown; user remains logged out | Not automated this pass | TODO |
+| TC-04 | Search product | Matching result appears | PASS | TODO |
+| TC-05 | Open product | Correct details appear | PASS | TODO |
+| TC-06 | Add to cart | Correct item appears in cart | PASS | TODO |
+| TC-07 | Update quantity | Quantity and subtotal change | Not automated this pass | TODO |
+| TC-08 | Remove product | Product disappears | Not automated this pass | TODO |
+| TC-09 | Logout | Login screen appears | Not automated this pass | TODO |
+
+TC-01–TC-06 are exercised end-to-end by `appium-tests/tests/eshop_login_search.js`
+(5/5 runs passing, §3.6). TC-03/07/08/09 are documented here as the natural
+next scenarios but are outside this automation pass's scope — the existing
+native suite already covers related ground (`tests/native/bugs.e2e.js` for an
+invalid-login/lockout defect, `tests/native/cart.e2e.js` for cart merge
+behaviour).
 
 # Appendix B — Evidence checklist
 
 ## Environment evidence
 
-- [ ] JDK and Node.js versions
-- [ ] Android SDK and Platform-Tools
-- [ ] `adb devices`
-- [ ] AVD configuration
-- [ ] Appium local version
-- [ ] UiAutomator2 installed
-- [ ] Appium server running
-- [ ] Maestro Studio installed
-- [ ] Maestro connected to emulator
+- [x] JDK and Node.js versions — Temurin JDK 17.0.19, verified 23 Jul 2026
+- [x] Android SDK and Platform-Tools — `%LOCALAPPDATA%\Android\Sdk`
+- [x] `adb devices` — `emulator-5554  device`
+- [x] AVD configuration — Pixel_8, Android 14 / API 34 Google Play x86_64, WHPX acceleration
+- [x] Appium local version — appium@3.5.2 installed in `appium-tests` (npm)
+- [x] UiAutomator2 installed — uiautomator2@8.1.1 (`npx appium driver list --installed`)
+- [x] Appium server running — `http://127.0.0.1:4723` (see `evidence/appium/`)
+- [ ] Maestro Studio installed (Maestro side — other team member's machine)
+- [ ] Maestro connected to emulator (Maestro side — other team member's machine)
 
 ## Functional evidence
 
 - [ ] Maestro Contacts smoke-test pass
-- [ ] Appium Calculator smoke-test pass
-- [ ] Appium EShop flow pass
+- [x] Appium Calculator smoke-test pass — `evidence/appium/smoke-test-log.txt`, `smoke-test-screen.png`
+- [x] Appium EShop flow pass — `evidence/appium/eshop-e2e-run1.log`…`run5.log`, `appium-tests/artifacts/eshop-flow-pass.png`
 - [ ] Maestro EShop flow pass
-- [ ] Failure screenshot and log for each reproduced failure mode
-- [ ] Five-run runtime table
-- [ ] Flake-rate calculation
-- [ ] UI-change repair-time evidence
-- [ ] AI-generated flow and student-edited flow
+- [x] Failure screenshot and log for each reproduced failure mode — `evidence/appium/debug-tap-*.png` (BUG-05), `ui-change-failure.log` + `appium-tests/artifacts/eshop-flow-fail.png` (§4.10)
+- [x] Five-run runtime table — §3.6 (40.7/40.8/42.8/58.5/59.9 s)
+- [x] Flake-rate calculation — 0/5 = 0% (§3.6)
+- [x] UI-change repair-time evidence — §4.10 (`ui-change-failure.log` → `ui-change-repaired.log`, ~3 min)
+- [ ] AI-generated flow and student-edited flow (Maestro/MaestroGPT side)
 
 ## Final review
 

@@ -1,0 +1,6 @@
+﻿
+> eshop-appium-tests@1.0.0 test:eshop
+> node tests/eshop_login_search.js
+
+PASS: EShop login, search, and cart flow.
+Runtime: 59.9s
