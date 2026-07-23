@@ -179,3 +179,132 @@ input, or equality validation in `handleRegister`.
 - Empty confirmation is treated as invalid.
 - Automated UI tests cover matching, non-matching, and empty confirmation
   values.
+
+---
+
+## BUG-04 — Mobile app calls every backend endpoint without the `/api` prefix
+
+| Field | Description |
+|---|---|
+| Reporter | Appium automation session, 23 Jul 2026 |
+| Component | Mobile application / networking (all screens) |
+| Severity | Critical |
+| Priority | High |
+| Status | Patched locally for the Appium demo (see below); needs an official fix in the upstream SUT |
+| Environment | Android mobile application (`com.eshop.mobile`), dev build via `expo run:android` |
+
+**Summary.** Every network call in the mobile app is missing the `/api` prefix
+that the backend actually serves under, so no screen can reach the API: the
+product list stays empty, login fails, and so on — with no visible error,
+because the failure path silently falls through to an empty state.
+
+**Root cause.** `src/eshop-sut/frontend-mobile/App.js` defined:
+
+```js
+const API_URL = "http://10.0.2.2:3000";
+```
+
+and every call is built as `` `${API_URL}/products` ``, `` `${API_URL}/login` ``,
+etc. (13 call sites). The backend (`src/eshop-sut/backend/server.js`) registers
+every route under `/api/...` (`app.get("/api/products", ...)`,
+`app.post("/api/login", ...)`, and so on) — confirmed by contrast with
+`frontend-web`, whose equivalent calls correctly use
+`http://localhost:3000/api/products` etc. So every mobile request hits a route
+that does not exist and gets Express's default 404 HTML page back.
+
+**Why it fails silently.** `fetchProducts` in `App.js` only shows an error box
+when the 404 body contains the literal string `<h1>`; Express's default 404
+page uses `<pre>`, not `<h1>`, so the check never triggers. `JSON.parse` throws,
+the code falls through to `setProducts(Array.isArray(data) ? data : [])`, and
+`data` (a string) becomes `[]` — a fully empty, error-free product list.
+
+**Steps to reproduce.**
+1. Start backend + Metro + emulator, install the mobile dev build.
+2. Open the app to the Home screen.
+3. Observe the product list stays empty (no loading spinner, no error message)
+   even though `GET http://localhost:3000/api/products` returns 5 seeded
+   products directly.
+
+**Expected.** The Home screen lists the 5 seeded products; login, search, and
+cart all work against the backend.
+**Actual.** No mobile screen that depends on the backend functions at all.
+
+**Evidence.** `evidence/appium/eshop-home-screen-final6.png` (empty product
+list on the unpatched build, backend confirmed reachable and returning data).
+
+**Local workaround (for the Appium demonstration only).** `API_URL` changed to
+`"http://10.0.2.2:3000/api"` in the local working copy so the required
+login → search → cart Appium flow (User Guide §3.3/§3.4) can be demonstrated
+end to end. **This is a demo patch, not an accepted fix** — the upstream EShop
+SUT repository still has the bug and should be corrected there (either fix
+`API_URL` or, more robustly, extract every literal endpoint path into one
+constant to prevent this class of drift).
+
+**Suggested fix.** Append `/api` to `API_URL`, or centralize all 13 fetch call
+sites behind a small API client module so the base path can't drift out of
+sync with the backend again.
+
+---
+
+## BUG-05 — Header nav (Login / Cart) is untappable on Android: renders under the status bar
+
+| Field | Description |
+|---|---|
+| Reporter | Appium automation session, 23 Jul 2026 |
+| Component | Mobile application / navigation header (all screens) |
+| Severity | Critical |
+| Priority | High |
+| Status | Patched locally for the Appium demo (see below); needs an official fix in the upstream SUT |
+| Environment | Android mobile application, Pixel 8 AVD, Android 14 / API 34, `com.eshop.mobile` |
+
+**Summary.** The top navigation bar — brand link, "Đăng nhập" (or the greeting
+once signed in), and the cart link — is not tappable on Android. It renders
+underneath the transparent system status bar, and that region does not
+deliver touches to the app on this device/OS combination. This affects real
+finger taps, not just automated ones: a raw `adb shell input tap` at the
+button's own reported coordinates (confirmed via `uiautomator dump`,
+`bounds="[720,47][896,98]"` for "Đăng nhập") produces no reaction, while the
+identical tap technique on the search box a few rows down works immediately.
+
+**Root cause.** `App.js` wraps every screen in React Native's **core**
+`SafeAreaView` (`import { SafeAreaView } from "react-native"`), not
+`react-native-safe-area-context`'s version. RN's built-in `SafeAreaView` only
+applies safe-area insets on iOS — on Android it behaves as a plain `View` and
+contributes no top padding. Combined with `app.json`'s
+`android.edgeToEdgeEnabled: true` (which makes the app draw its content behind
+the system bars), the header ends up drawn at `y=0`, directly under the
+status bar, with no compensating inset. On this Android build, the status bar
+band still claims touch input in that area (as it does for the notification
+pull-down gesture) even though the app's own (untouchable) content is visible
+through it.
+
+**Steps to reproduce.**
+1. Launch the EShop mobile app dev build (`expo run:android`) on an Android
+   14 emulator with edge-to-edge enabled.
+2. From the Home screen, tap **"Đăng nhập"** in the top-right of the header.
+3. Tap **"Giỏ (N)"** next to it.
+
+**Expected.** Either tap navigates to the Login screen / Cart screen
+respectively.
+**Actual.** Neither tap has any effect. No screen change, no visual feedback.
+Confirmed with three independent input methods: Appium's W3C Actions pointer
+tap, Appium's `mobile: clickGesture`, and a raw `adb shell input tap` at the
+exact coordinates `uiautomator dump` reports for the element.
+
+**Evidence.** `evidence/appium/debug-tap-cart.png` and
+`debug-tap-offset.png` (before/after taps at the reported button coordinates
+— no change), contrasted with `debug-tap-control.png` (identical tap
+technique on the search box, which works immediately).
+
+**Local workaround (for the Appium demonstration only).** Added
+`paddingTop: 14 + (RNStatusBar.currentHeight || 0)` to `styles.navBar` so the
+header is pushed below the actual status bar height on Android. **This is a
+demo patch, not an accepted fix** — the correct fix belongs in the upstream
+EShop SUT.
+
+**Suggested fix.** Replace the `react-native` core `SafeAreaView` import with
+`react-native-safe-area-context`'s `SafeAreaView` (or a `useSafeAreaInsets()`
+hook applied to the header), which correctly reports Android status-bar
+insets under edge-to-edge. This is the standard, device-independent fix
+(unlike the local `StatusBar.currentHeight` patch above, which is Android-only
+and doesn't generalize to notches/cutouts on all devices).

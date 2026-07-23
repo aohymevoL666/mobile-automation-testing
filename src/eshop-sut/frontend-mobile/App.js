@@ -5,6 +5,7 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  StatusBar as RNStatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -13,7 +14,10 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
-const API_URL = "http://10.0.2.2:3000"; // IP LAN để chạy được trên iOS/Android và thiết bị thật
+const API_URL = "http://10.0.2.2:3000/api"; // IP LAN để chạy được trên iOS/Android và thiết bị thật
+// NOTE (bug found during Appium automation, 23 Jul 2026): every fetch below was built as
+// `${API_URL}/products` etc. with API_URL missing the `/api` prefix used by every backend
+// route (server.js), so no mobile screen could ever reach the API. See bug-report.md.
 
 const formatMoney = (value) => `${Number(value).toLocaleString()} ₫`;
 
@@ -1011,6 +1015,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 14,
+    // BUG-05 workaround: RN's core SafeAreaView is an Android no-op, so with
+    // edgeToEdgeEnabled the bar draws under (and is un-tappable behind) the
+    // status bar. Push it down by the real status bar height instead.
+    paddingTop: 14 + (RNStatusBar.currentHeight || 0),
     backgroundColor: "#2563eb",
   },
   brand: { fontSize: 20, fontWeight: "bold", color: "#fff" },
