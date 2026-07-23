@@ -179,3 +179,98 @@ input, or equality validation in `handleRegister`.
 - Empty confirmation is treated as invalid.
 - Automated UI tests cover matching, non-matching, and empty confirmation
   values.
+
+---
+
+## BUG-04 — Top navigation links are untappable on Pixel 8
+
+| Field | Description |
+|---|---|
+| Reporter | Phạm Vũ Ngọc Duy (23127183) |
+| Component | Mobile application / Android header navigation |
+| Severity | High |
+| Priority | High |
+| Status | Open |
+| Tool | Maestro Studio, ADB, and manual testing |
+| Environment | Expo Go on a Pixel 8 Android emulator |
+| Device dependency | Reproduced on Pixel 8; not reproduced on Nexus 5X |
+
+**Summary.** The **Login** and **Cart** links in the application's top
+navigation bar cannot be tapped on a Pixel 8 emulator. The same area also
+contains the **Profile** link after login, so all header-navigation flows are
+affected.
+
+**Preconditions.**
+
+- Run the mobile application through Expo Go on a Pixel 8 emulator.
+- Android edge-to-edge rendering is enabled.
+- Open the EShop product-list screen.
+
+**Steps to reproduce.**
+
+1. Launch Expo Go on a Pixel 8 emulator.
+2. Open the `frontend-mobile` project.
+3. Wait for the product-list screen to appear.
+4. Tap the **Login** link in the top navigation bar.
+5. Tap the **Cart** link in the same navigation bar.
+
+**Expected result.**
+
+- Tapping **Login** opens the login screen.
+- Tapping **Cart** opens the shopping-cart screen.
+- All header controls render below the Android system status bar and remain
+  reachable on devices with display cutouts.
+
+**Actual result.**
+
+- Tapping **Login** or **Cart** produces no response.
+- The links render inside the system status-bar region and do not receive touch
+  events.
+- The user cannot reach the Login, Cart, or Profile screens because the
+  application provides no alternative navigation path.
+
+**Evidence.**
+
+- The issue occurs with both Maestro actions and direct manual taps.
+- An independent `adb input tap` at the exact link coordinates also produces
+  no response.
+- A control tap on **Add to cart** elsewhere on the screen works and opens the
+  success dialog.
+- `adb shell dumpsys window displays` reports a status-bar region of
+  approximately `y = 0–132 px` on the Pixel 8 profile.
+- The defect is not reproduced on a Nexus 5X profile with a shorter status-bar
+  region, confirming that it depends on the device layout.
+
+**Root cause.** `src/eshop-sut/frontend-mobile/App.js` imports `SafeAreaView`
+from the core `react-native` package. This component does not apply Android
+safe-area insets. In combination with `"edgeToEdgeEnabled": true` in
+`src/eshop-sut/frontend-mobile/app.json`, the navigation bar is drawn beneath
+the Android status bar and Pixel 8 camera-cutout area.
+
+**Impact.** This is a blocking navigation defect on affected devices. Users
+cannot sign in, view the cart, access their profile, or complete flows that
+depend on those screens.
+
+**Workaround.** Use an emulator or device without the affected camera-cutout
+layout, such as the Nexus 5X profile. This is suitable only as a testing
+workaround and does not resolve the production defect.
+
+**Suggested fix.**
+
+1. Install and configure `react-native-safe-area-context`.
+2. Wrap the application in `SafeAreaProvider`.
+3. Apply Android safe-area insets to the header or use the library's
+   `SafeAreaView`.
+4. Verify the header on devices with camera cutouts and with edge-to-edge
+   rendering enabled.
+
+**Acceptance criteria.**
+
+- Login, Cart, and Profile links are visible below the system status bar.
+- Each link responds to both manual and automated taps on Pixel 8.
+- Header navigation remains functional on devices with and without display
+  cutouts.
+- Maestro tests can open Login and Cart without coordinate-based workarounds.
+
+**Source.** Adapted from the Maestro investigation in
+`C:\Users\aohymevol\Documents\class-material\SoftwareTesting\t03-automation-mobile\bug-report-maestro.md`.
