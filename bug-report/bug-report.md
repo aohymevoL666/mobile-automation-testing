@@ -111,3 +111,71 @@ that exactly one cart row exists with quantity `2`. Run it with:
 cd appium-tests
 npm run test:cart
 ```
+
+---
+
+## BUG-03 — Sign-up form is missing a confirm-password field
+
+| Field | Description |
+|---|---|
+| Reporter | Huỳnh Lê Khương Duy (23127176) |
+| Component | Mobile application / user registration |
+| Severity | Medium |
+| Priority | Medium |
+| Status | Open |
+| Environment | Android mobile application |
+
+**Summary.** The sign-up interface provides only one password field. It does
+not ask the user to re-enter the password before creating an account.
+
+**Preconditions.**
+
+- The EShop mobile application is running.
+- The user is not signed in.
+
+**Steps to reproduce.**
+
+1. Open the EShop mobile application.
+2. Tap **Sign in**.
+3. Select the link to create a new account.
+4. Review all fields displayed on the sign-up form.
+
+**Expected result.**
+
+- The form displays both **Password** and **Confirm password** fields.
+- Both fields mask the entered text.
+- Registration is allowed only when both password values match.
+- If the values differ, the form remains open and displays a clear validation
+  message such as “Passwords do not match.”
+
+**Actual result.**
+
+- The form displays only one **Password** field.
+- The user cannot verify the password before submitting the form.
+- An account can be created with an accidentally mistyped password, provided
+  that the password otherwise passes strength validation.
+
+**Impact.** A typing mistake may create an account with a password the user
+does not know. The user may then be unable to sign in and must use the password
+reset process, increasing frustration and support effort.
+
+**Technical observation.** The registration screen in
+`src/eshop-sut/frontend-mobile/App.js` stores only `registerPassword` and sends
+it directly to the registration API. There is no confirm-password state,
+input, or equality validation in `handleRegister`.
+
+**Suggested fix.**
+
+1. Add a masked **Confirm password** input to the sign-up form.
+2. Store its value separately, for example in `registerConfirmPassword`.
+3. Before calling the registration API, verify that both values are identical.
+4. Display an inline error and prevent submission when they do not match.
+
+**Acceptance criteria.**
+
+- The sign-up form contains two masked password inputs.
+- Matching valid passwords allow registration to proceed.
+- Non-matching passwords prevent the API request and show a validation error.
+- Empty confirmation is treated as invalid.
+- Automated UI tests cover matching, non-matching, and empty confirmation
+  values.
