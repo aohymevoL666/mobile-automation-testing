@@ -9,6 +9,7 @@
     "test:native": "wdio run ./wdio.native.conf.js",
     "test:login": "wdio run ./wdio.login.conf.js",
     "test:bugs": "wdio run ./wdio.bugs.conf.js",
+    "test:cart": "wdio run ./wdio.cart.conf.js",
     "test:ai": "wdio run ./wdio.ai.conf.js"
   },
   "devDependencies": {

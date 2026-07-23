@@ -133,21 +133,27 @@ export default function App() {
 
   const addToCart = (selectedProduct, selectedQuantity = 1) => {
     const safeQuantity = normalizeQuantity(selectedQuantity);
-    const existingIndex = cart.findIndex(
-      (item) => item.id === selectedProduct.id,
-    );
+    setCart((currentCart) => {
+      const existingIndex = currentCart.findIndex(
+        (item) => item.id === selectedProduct.id,
+      );
 
-    if (existingIndex >= 0) {
-      const newCart = [...cart];
-      newCart[existingIndex] = {
-        ...newCart[existingIndex],
-        quantity:
-          normalizeQuantity(newCart[existingIndex].quantity) + safeQuantity,
-      };
-      setCart(newCart);
-    } else {
-      setCart([...cart, { ...selectedProduct, quantity: safeQuantity }]);
-    }
+      if (existingIndex < 0) {
+        return [
+          ...currentCart,
+          { ...selectedProduct, quantity: safeQuantity },
+        ];
+      }
+
+      return currentCart.map((item, index) =>
+        index === existingIndex
+          ? {
+              ...item,
+              quantity: normalizeQuantity(item.quantity) + safeQuantity,
+            }
+          : item,
+      );
+    });
 
     Alert.alert("Thành công", "Đã thêm vào giỏ hàng");
   };
@@ -432,7 +438,10 @@ export default function App() {
             {user ? `Chào, ${user.name}` : "Đăng nhập"}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setView("cart")}>
+        <TouchableOpacity
+          testID="cart-nav"
+          onPress={() => setView("cart")}
+        >
           <Text style={styles.navText}>Giỏ ({cart.length})</Text>
         </TouchableOpacity>
       </View>
@@ -471,6 +480,7 @@ export default function App() {
           <Text style={styles.secondaryButtonText}>Xem chi tiết</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          testID={`add-to-cart-${item.id}`}
           style={[styles.button, styles.actionFlex]}
           onPress={() => addToCart(item, 1)}
         >
@@ -602,13 +612,18 @@ export default function App() {
           <>
             <ScrollView style={styles.cartList}>
               {cart.map((item, index) => (
-                <View key={`${item.id}-${index}`} style={styles.cartItem}>
+                <View
+                  key={item.id}
+                  testID={`cart-item-${item.id}`}
+                  style={styles.cartItem}
+                >
                   <View style={{ flex: 1 }}>
                     <Text style={styles.cartProductName}>{item.name}</Text>
                     <Text>Giá: {formatMoney(item.price)}</Text>
                     <View style={styles.inlineRow}>
                       <Text>Số lượng:</Text>
                       <TextInput
+                        testID={`cart-quantity-${item.id}`}
                         style={styles.cartQuantityInput}
                         keyboardType="numeric"
                         value={String(item.quantity ?? "")}
