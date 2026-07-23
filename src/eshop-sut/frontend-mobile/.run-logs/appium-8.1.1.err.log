@@ -1,0 +1,1 @@
+[38;5;112m[Appium][0m Could not load driver 'uiautomator2', so it will not be available. Error in loading the driver was: Cannot find package 'appium' imported from C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\build\lib\driver.js

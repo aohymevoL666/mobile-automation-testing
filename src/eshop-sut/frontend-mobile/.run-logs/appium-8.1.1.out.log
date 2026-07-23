@@ -1,0 +1,99 @@
+[38;5;112m[Appium][0m Welcome to Appium v3.5.2
+[38;5;112m[Appium][0m Non-default server args:
+[38;5;112m[Appium][0m { address: [32m'127.0.0.1'[39m }
+[38;5;112m[Appium][0m The autodetected Appium home path: C:\Users\aohymevol\.appium
+[38;5;112m[Appium][0m Attempting to load driver uiautomator2...
+[38;5;112m[Appium][0m Requiring driver at C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\build\lib\index.js
+[38;5;112m[Appium][0m Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'appium' imported from C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\build\lib\driver.js
+    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+    at packageResolve (node:internal/modules/esm/resolve:768:81)
+    at moduleResolve (node:internal/modules/esm/resolve:859:18)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:691:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:708:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:740:52)
+    at #resolve (node:internal/modules/esm/loader:673:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:593:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:253:17)
+    at new ModuleJob (node:internal/modules/esm/module_job:232:26)
+    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:562:11)
+    at afterResolve (node:internal/modules/esm/loader:597:52)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:12)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+[38;5;112m[Appium][0m Appium REST http interface listener started on http://127.0.0.1:4723
+[38;5;112m[Appium][0m Available drivers:
+[38;5;112m[Appium][0m   - uiautomator2@8.1.1 (automationName 'UiAutomator2')
+[38;5;112m[Appium][0m No plugins have been installed. Use the "appium plugin" command to install the one(s) you want to use.
+[38;5;86m[HTTP][0m --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]}}
+[38;5;27m[AppiumDriver@eccd][0m Calling AppiumDriver.createSession() with args: [{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]},{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]},{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]}]
+[38;5;27m[AppiumDriver@eccd][0m Event 'newSessionRequested' logged at 1784725460717 (20:04:20 GMT+0700 (Indochina Time))
+[38;5;112m[Appium][0m Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[38;5;112m[Appium][0m The 'uiautomator2' driver was installed and matched caps.
+[38;5;112m[Appium][0m Will require it at C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver
+[38;5;112m[Appium][0m Requiring driver at C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\build\lib\index.js
+[38;5;27m[AppiumDriver@eccd][0m Event 'newSessionStarted' logged at 1784725460723 (20:04:20 GMT+0700 (Indochina Time))
+[38;5;27m[AppiumDriver@eccd][0m Encountered internal error running command: Error: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Cannot find package 'appium' imported from C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\build\lib\driver.js)
+    at DriverConfig.findMatchingDriver (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\extension\driver-config.js:57:19)
+    at async AppiumDriver.createSession (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:232:82)
+    at async runCommandPromise (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\basedriver\driver.js:119:24)
+    at async AppiumDriver.executeCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\basedriver\driver.js:162:15)
+    at async defaultBehavior (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:582:24)
+    at async AppiumDriver.executeWrappedCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:694:22)
+    at async AppiumDriver.executeCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:598:21)
+    at async asyncHandler (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\protocol\protocol.js:401:25)
+[38;5;86m[HTTP][0m <-- POST /session 500 22 ms - 2871
+[38;5;86m[HTTP][0m --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]}}
+[38;5;27m[AppiumDriver@eccd][0m Calling AppiumDriver.createSession() with args: [{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]},{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]},{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]}]
+[38;5;27m[AppiumDriver@eccd][0m Event 'newSessionRequested' logged at 1784725460737 (20:04:20 GMT+0700 (Indochina Time))
+[38;5;112m[Appium][0m Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[38;5;112m[Appium][0m The 'uiautomator2' driver was installed and matched caps.
+[38;5;112m[Appium][0m Will require it at C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver
+[38;5;112m[Appium][0m Requiring driver at C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\build\lib\index.js
+[38;5;27m[AppiumDriver@eccd][0m Event 'newSessionStarted' logged at 1784725460741 (20:04:20 GMT+0700 (Indochina Time))
+[38;5;27m[AppiumDriver@eccd][0m Encountered internal error running command: Error: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Cannot find package 'appium' imported from C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\build\lib\driver.js)
+    at DriverConfig.findMatchingDriver (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\extension\driver-config.js:57:19)
+    at async AppiumDriver.createSession (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:232:82)
+    at async runCommandPromise (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\basedriver\driver.js:119:24)
+    at async AppiumDriver.executeCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\basedriver\driver.js:162:15)
+    at async defaultBehavior (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:582:24)
+    at async AppiumDriver.executeWrappedCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:694:22)
+    at async AppiumDriver.executeCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:598:21)
+    at async asyncHandler (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\protocol\protocol.js:401:25)
+[38;5;86m[HTTP][0m <-- POST /session 500 5 ms - 2871
+[38;5;86m[HTTP][0m --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]}}
+[38;5;27m[AppiumDriver@eccd][0m Calling AppiumDriver.createSession() with args: [{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]},{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]},{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]}]
+[38;5;27m[AppiumDriver@eccd][0m Event 'newSessionRequested' logged at 1784725461267 (20:04:21 GMT+0700 (Indochina Time))
+[38;5;112m[Appium][0m Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[38;5;112m[Appium][0m The 'uiautomator2' driver was installed and matched caps.
+[38;5;112m[Appium][0m Will require it at C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver
+[38;5;112m[Appium][0m Requiring driver at C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\build\lib\index.js
+[38;5;27m[AppiumDriver@eccd][0m Event 'newSessionStarted' logged at 1784725461271 (20:04:21 GMT+0700 (Indochina Time))
+[38;5;27m[AppiumDriver@eccd][0m Encountered internal error running command: Error: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Cannot find package 'appium' imported from C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\build\lib\driver.js)
+    at DriverConfig.findMatchingDriver (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\extension\driver-config.js:57:19)
+    at async AppiumDriver.createSession (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:232:82)
+    at async runCommandPromise (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\basedriver\driver.js:119:24)
+    at async AppiumDriver.executeCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\basedriver\driver.js:162:15)
+    at async defaultBehavior (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:582:24)
+    at async AppiumDriver.executeWrappedCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:694:22)
+    at async AppiumDriver.executeCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:598:21)
+    at async asyncHandler (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\protocol\protocol.js:401:25)
+[38;5;86m[HTTP][0m <-- POST /session 500 6 ms - 2871
+[38;5;86m[HTTP][0m --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]}}
+[38;5;27m[AppiumDriver@eccd][0m Calling AppiumDriver.createSession() with args: [{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]},{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]},{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:deviceName":"emulator-5554","appium:appPackage":"com.eshop.mobile","appium:appActivity":".MainActivity","appium:noReset":true,"appium:newCommandTimeout":300,"appium:autoGrantPermissions":true},"firstMatch":[{}]}]
+[38;5;27m[AppiumDriver@eccd][0m Event 'newSessionRequested' logged at 1784725462305 (20:04:22 GMT+0700 (Indochina Time))
+[38;5;112m[Appium][0m Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[38;5;112m[Appium][0m The 'uiautomator2' driver was installed and matched caps.
+[38;5;112m[Appium][0m Will require it at C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver
+[38;5;112m[Appium][0m Requiring driver at C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\build\lib\index.js
+[38;5;27m[AppiumDriver@eccd][0m Event 'newSessionStarted' logged at 1784725462309 (20:04:22 GMT+0700 (Indochina Time))
+[38;5;27m[AppiumDriver@eccd][0m Encountered internal error running command: Error: Could not find a driver for automationName 'UiAutomator2' and platformName 'Android'. Have you installed a driver that supports those capabilities? Run 'appium driver list --installed' to see. (Lower-level error: Cannot find package 'appium' imported from C:\Users\aohymevol\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\build\lib\driver.js)
+    at DriverConfig.findMatchingDriver (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\extension\driver-config.js:57:19)
+    at async AppiumDriver.createSession (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:232:82)
+    at async runCommandPromise (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\basedriver\driver.js:119:24)
+    at async AppiumDriver.executeCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\basedriver\driver.js:162:15)
+    at async defaultBehavior (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:582:24)
+    at async AppiumDriver.executeWrappedCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:694:22)
+    at async AppiumDriver.executeCommand (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\build\lib\appium.js:598:21)
+    at async asyncHandler (C:\Users\aohymevol\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\build\lib\protocol\protocol.js:401:25)
+[38;5;86m[HTTP][0m <-- POST /session 500 6 ms - 2871

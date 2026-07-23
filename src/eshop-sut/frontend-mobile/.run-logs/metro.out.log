@@ -1,0 +1,32 @@
+Starting project at C:\Users\aohymevol\Documents\class-material\mobile-automation-testing\src\eshop-sut\frontend-mobile
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+Android .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 567ms index.js (685 modules)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+Android .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 34ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+Android .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 30ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+Android .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 27ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+Android .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 28ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+Android .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 33ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+Android .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 29ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+Android .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 33ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+Android .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 33ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context

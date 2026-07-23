@@ -32,10 +32,15 @@ adb reverse tcp:3000 tcp:3000   # backend
 adb reverse tcp:8081 tcp:8081   # metro
 npx appium --port 4723          # separate terminal
 
-npx wdio run ./wdio.login.conf.js   # login    -> passing
-npx wdio run ./wdio.bugs.conf.js    # bug      -> 1 failing (FM-04)
-npx wdio run ./wdio.ai.conf.js      # AI test  -> round1_raw (red) / round2_fixed (green)
+npm run wdio -- run ./wdio.login.conf.js   # login -> passing
+npm run wdio -- run ./wdio.bugs.conf.js    # bug -> 1 failing (FM-04)
+npm run wdio -- run ./wdio.ai.conf.js      # AI -> round1_raw (red) / round2_fixed (green)
 ```
+
+You can also use the shorter named scripts: `npm run test:login`,
+`npm run test:bugs`, `npm run test:ai`, or `npm test` for all native tests.
+Stock npm requires the `run` keyword before a package script, so the command is
+`npm run wdio -- run <config>`, not `npm wdio run <config>`.
 
 Prerequisites: Android SDK + AVD, the native debug build installed
 (`mobile-app` / `frontend-mobile`: `npx expo run:android`), the `uiautomator2`

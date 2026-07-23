@@ -4,12 +4,17 @@
   "private": true,
   "description": "Appium 2 + WebdriverIO smoke tests for the EShop mobile app",
   "scripts": {
-    "test": "wdio run ./wdio.conf.js"
+    "wdio": "wdio",
+    "test": "wdio run ./wdio.native.conf.js",
+    "test:native": "wdio run ./wdio.native.conf.js",
+    "test:login": "wdio run ./wdio.login.conf.js",
+    "test:bugs": "wdio run ./wdio.bugs.conf.js",
+    "test:ai": "wdio run ./wdio.ai.conf.js"
   },
   "devDependencies": {
     "@wdio/cli": "^9.29.1",
-    "@wdio/local-runner": "^9.0.0",
-    "@wdio/mocha-framework": "^9.0.0",
-    "@wdio/spec-reporter": "^9.0.0"
+    "@wdio/local-runner": "^9.29.1",
+    "@wdio/mocha-framework": "^9.29.1",
+    "@wdio/spec-reporter": "^9.29.1"
   }
 }
