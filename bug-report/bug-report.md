@@ -42,3 +42,72 @@ confirming the failure is the bug and not the test.
 
 **Suggested fix.** Increment by `1` (`user.login_attempts + 1`); optionally
 surface the specific "account locked" message to the user.
+
+---
+
+## BUG-02 — Duplicate cart rows when adding the same product twice
+
+| Field | Description |
+|---|---|
+| Reporter | Huỳnh Lê Khương Duy (23127176) |
+| Component | Mobile application / shopping cart |
+| Severity | Medium |
+| Priority | High |
+| Status | Fixed; regression test added |
+| Tool | Appium + WebdriverIO (UiAutomator2) |
+| Environment | Android mobile application |
+
+**Summary.** Adding the same product to the cart twice creates two separate
+cart rows. The cart should contain one row for that product with its quantity
+increased to `2`.
+
+**Preconditions.**
+
+- The mobile application, backend, Appium server, and Android emulator are
+  running.
+- At least one product is available on the home screen.
+- The cart is initially empty.
+
+**Steps to reproduce.**
+
+1. Open the EShop mobile application.
+2. Locate any product on the home screen.
+3. Tap **Add to cart** for that product.
+4. Dismiss the success alert.
+5. Tap **Add to cart** for the same product again.
+6. Dismiss the success alert and open the cart.
+
+**Expected result.**
+
+- The cart displays one row for the selected product.
+- The product quantity is `2`.
+- The cart subtotal is the product price multiplied by `2`.
+
+**Actual result.**
+
+- The cart displays two separate rows for the same product.
+- Each row has a quantity of `1`.
+- The cart item counter incorrectly represents rows instead of distinct
+  products.
+
+**Impact.** Duplicate rows make the cart difficult to understand and manage.
+They can also cause incorrect item counts and inconsistent checkout payloads,
+particularly when a customer edits or removes only one of the duplicate rows.
+
+**Root cause.** The add-to-cart operation appended a new cart item without
+reliably updating the existing entry for the same product. State updates based
+on a captured `cart` value could also use stale data when add actions occurred
+close together.
+
+**Resolution.** Update the cart through React's functional state setter. Find
+an existing item by product ID and increase its quantity; append a new row only
+when that product ID is not already present.
+
+**Evidence and regression coverage.** The Appium regression test
+`appium-tests/tests/native/cart.e2e.js` adds the same product twice and verifies
+that exactly one cart row exists with quantity `2`. Run it with:
+
+```powershell
+cd appium-tests
+npm run test:cart
+```
