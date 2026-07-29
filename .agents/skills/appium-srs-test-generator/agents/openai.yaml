@@ -1,0 +1,4 @@
+interface:
+  display_name: "Appium SRS Test Generator"
+  short_description: "Generate bug-finding Appium tests from SRS"
+  default_prompt: "Use $appium-srs-test-generator to turn the mobile application's SRS into traceable Appium tests that fail on non-conforming behavior."
