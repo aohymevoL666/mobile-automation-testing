@@ -5,15 +5,16 @@
   "description": "Appium 2 + WebdriverIO smoke tests for the EShop mobile app",
   "scripts": {
     "appium": "appium",
-    "test:smoke": "node tests/test_calculator.js",
-    "test:eshop": "node tests/eshop_login_search.js",
+    "test:smoke": "node test/standalone/calculator.smoke.js",
+    "test:eshop": "node test/standalone/eshop-flow.e2e.js",
     "wdio": "wdio",
-    "test": "wdio run ./wdio.native.conf.js",
-    "test:native": "wdio run ./wdio.native.conf.js",
-    "test:login": "wdio run ./wdio.login.conf.js",
-    "test:bugs": "wdio run ./wdio.bugs.conf.js",
-    "test:cart": "wdio run ./wdio.cart.conf.js",
-    "test:ai": "wdio run ./wdio.ai.conf.js"
+    "test": "wdio run ./config/wdio.base.conf.js",
+    "test:native": "wdio run ./config/wdio.base.conf.js",
+    "test:login": "wdio run ./config/suites/login.conf.js",
+    "test:bugs": "wdio run ./config/suites/bugs.conf.js",
+    "test:cart": "wdio run ./config/suites/cart.conf.js",
+    "test:srs": "wdio run ./config/suites/srs.conf.js",
+    "test:ai": "wdio run ./config/suites/ai.conf.js"
   },
   "devDependencies": {
     "@wdio/cli": "^9.29.1",

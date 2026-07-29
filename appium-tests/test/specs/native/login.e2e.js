@@ -7,7 +7,13 @@
 // Flow: Home -> "Đăng nhập" -> enter valid credentials -> "Sign In"
 //       -> logged in, product list ("Danh sách sản phẩm") is shown.
 // ============================================================================
-const { editText, tapText, waitTextContains, byTextContains, openLogin } = require("./helpers");
+const {
+  editText,
+  tapText,
+  waitTextContains,
+  byTextContains,
+  openLogin,
+} = require("../../support/native");
 
 describe("Appium demo — login", () => {
   const EMAIL = "test@eshop.com";      // seeded user

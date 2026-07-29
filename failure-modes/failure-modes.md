@@ -47,7 +47,7 @@
 | Failure Mode ID | FM-04 |
 | Failure Mode | The account lockout triggers one attempt too early. |
 | Related Requirement | Login / account lockout policy (three failed attempts) |
-| Description | The backend increments the failed-login counter by two on each failed attempt (`login_attempts + 2`) and locks at a threshold of three. The counter therefore jumps 0 → 2 → 4, crossing the threshold on the second failure. The account is locked after only two wrong passwords instead of three, and even the correct password is then rejected. Verified independently through the API and reproduced end-to-end with the Appium test `appium-tests/tests/native/bugs.e2e.js`. |
+| Description | The backend increments the failed-login counter by two on each failed attempt (`login_attempts + 2`) and locks at a threshold of three. The counter therefore jumps 0 → 2 → 4, crossing the threshold on the second failure. The account is locked after only two wrong passwords instead of three, and even the correct password is then rejected. Verified independently through the API and reproduced end-to-end with the Appium test `appium-tests/test/specs/native/bugs.e2e.js`. |
 | Steps to Reproduce | 1. Register or use an existing account.<br>2. Open "Đăng nhập" and sign in with a wrong password.<br>3. Sign in with a wrong password again.<br>4. Sign in with the CORRECT password. |
 | Expected Result | The correct password logs the user in (the policy allows three attempts before locking). |
 | Observed Failure | The account is already locked after the second wrong attempt; the correct login is refused. The backend returns "Tài khoản đã bị khóa. Vui lòng thử lại sau.", though the app surfaces only a generic failure message. |

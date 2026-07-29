@@ -129,8 +129,14 @@ The team successfully ran a Contacts smoke test in Maestro Studio and recorded b
 T03-Mobile-Automation/
 ├── mobile-app/
 ├── appium-tests/
-│   ├── tests/
+│   ├── config/
+│   ├── test/
+│   │   ├── specs/
+│   │   ├── support/
+│   │   ├── pageobjects/
+│   │   └── standalone/
 │   ├── artifacts/
+│   ├── docs/
 │   ├── package.json
 │   └── package-lock.json
 ├── maestro/
@@ -337,8 +343,8 @@ Add scripts to `appium-tests/package.json`:
 {
   "scripts": {
     "appium": "appium",
-    "test:smoke": "node tests/test_calculator.js",
-    "test:eshop": "node tests/eshop_login_search.js"
+    "test:smoke": "node test/standalone/calculator.smoke.js",
+    "test:eshop": "node test/standalone/eshop-flow.e2e.js"
   }
 }
 ```
@@ -534,7 +540,7 @@ Run the flow by selecting **Run Test** in Maestro Studio.
 
 ## 3.2 Appium smoke-test template
 
-Create `appium-tests/tests/test_calculator.js`:
+Create `appium-tests/test/standalone/calculator.smoke.js`:
 
 ```javascript
 const { remote } = require("webdriverio");
@@ -630,8 +636,9 @@ The Stage S4 first test should remain within 15 steps:
 
 ## 3.4 Appium EShop template
 
-Final version of `appium-tests/tests/eshop_login_search.js`. It uses the Page
-Objects from §4.4 (`appium-tests/pages/`) and the real locators from §2.10:
+Final version of `appium-tests/test/standalone/eshop-flow.e2e.js`. It uses the
+Page Objects from §4.4 (`appium-tests/test/pageobjects/`) and the real locators
+from §2.10:
 
 ```javascript
 const assert = require("node:assert/strict");
@@ -639,9 +646,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { remote } = require("webdriverio");
 
-const LoginPage = require("../pages/LoginPage");
-const HomePage = require("../pages/HomePage");
-const CartPage = require("../pages/CartPage");
+const LoginPage = require("../pageobjects/LoginPage");
+const HomePage = require("../pageobjects/HomePage");
+const CartPage = require("../pageobjects/CartPage");
 
 const config = {
   appPackage: process.env.APP_PACKAGE || "com.eshop.mobile",
@@ -862,11 +869,11 @@ A long XPath may break after a harmless UI layout change.
 
 ## 4.4 Page Object pattern
 
-The suite implements three Page Objects in `appium-tests/pages/`:
+The suite implements three Page Objects in `appium-tests/test/pageobjects/`:
 `LoginPage.js`, `HomePage.js`, and `CartPage.js`. The real `LoginPage`:
 
 ```javascript
-// appium-tests/pages/LoginPage.js
+// appium-tests/test/pageobjects/LoginPage.js
 class LoginPage {
   constructor(driver) {
     this.driver = driver;
@@ -1473,11 +1480,11 @@ EShop spec (SRS):  src/eshop-sut/README.md
 | TC-08 | Remove product | Product disappears | Not automated this pass | TODO |
 | TC-09 | Logout | Login screen appears | Not automated this pass | TODO |
 
-TC-01–TC-06 are exercised end-to-end by `appium-tests/tests/eshop_login_search.js`
+TC-01–TC-06 are exercised end-to-end by `appium-tests/test/standalone/eshop-flow.e2e.js`
 (5/5 runs passing, §3.6). TC-03/07/08/09 are documented here as the natural
 next scenarios but are outside this automation pass's scope — the existing
-native suite already covers related ground (`tests/native/bugs.e2e.js` for an
-invalid-login/lockout defect, `tests/native/cart.e2e.js` for cart merge
+native suite already covers related ground (`test/specs/native/bugs.e2e.js` for an
+invalid-login/lockout defect, `test/specs/native/cart.e2e.js` for cart merge
 behaviour).
 
 # Appendix B — Evidence checklist
@@ -1498,9 +1505,9 @@ behaviour).
 
 - [ ] Maestro Contacts smoke-test pass
 - [x] Appium Calculator smoke-test pass — `evidence/appium/smoke-test-log.txt`, `smoke-test-screen.png`
-- [x] Appium EShop flow pass — `evidence/appium/eshop-e2e-run1.log`…`run5.log`, `appium-tests/artifacts/eshop-flow-pass.png`
+- [x] Appium EShop flow pass — `evidence/appium/eshop-e2e-run1.log`…`run5.log`, `appium-tests/artifacts/screenshots/eshop-flow-pass.png`
 - [ ] Maestro EShop flow pass
-- [x] Failure screenshot and log for each reproduced failure mode — `evidence/appium/debug-tap-*.png` (BUG-05), `ui-change-failure.log` + `appium-tests/artifacts/eshop-flow-fail.png` (§4.10)
+- [x] Failure screenshot and log for each reproduced failure mode — `evidence/appium/debug-tap-*.png` (BUG-05), `ui-change-failure.log` + `appium-tests/artifacts/screenshots/eshop-flow-fail.png` (§4.10)
 - [x] Five-run runtime table — §3.6 (40.7/40.8/42.8/58.5/59.9 s)
 - [x] Flake-rate calculation — 0/5 = 0% (§3.6)
 - [x] UI-change repair-time evidence — §4.10 (`ui-change-failure.log` → `ui-change-repaired.log`, ~3 min)

@@ -11,7 +11,13 @@
 // password is rejected. Verified independently with curl.
 // ============================================================================
 const http = require("http");
-const { editText, tapText, waitTextContains, openLogin, byTextContains } = require("./helpers");
+const {
+  editText,
+  tapText,
+  waitTextContains,
+  openLogin,
+  byTextContains,
+} = require("../../support/native");
 
 // Register a fresh user straight against the backend (test fixture setup).
 function apiRegister(name, email, password) {

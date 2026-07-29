@@ -14,7 +14,12 @@
 // Each test relaunches to a fresh, EMPTY register screen (see openRegister) so
 // the cases are independent — no shared input, no flaky clearValue().
 // ============================================================================
-const { editText, tapText, waitTextContains, openRegister } = require("./helpers");
+const {
+  editText,
+  tapText,
+  waitTextContains,
+  openRegister,
+} = require("../../support/native");
 
 // Unique email per registration (counter avoids same-millisecond collisions).
 let seq = 0;

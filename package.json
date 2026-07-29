@@ -1,0 +1,32 @@
+{
+  "name": "mobile-automation-testing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mobile automation testing examples with Appium and Maestro",
+  "scripts": {
+    "appium": "npm --prefix appium-tests run appium",
+    "test": "npm --prefix appium-tests test",
+    "test:appium": "npm --prefix appium-tests test",
+    "test:login": "npm --prefix appium-tests run test:login",
+    "test:cart": "npm --prefix appium-tests run test:cart",
+    "test:bugs": "npm --prefix appium-tests run test:bugs",
+    "test:srs": "npm --prefix appium-tests run test:srs",
+    "test:ai": "npm --prefix appium-tests run test:ai"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aohymevoL666/mobile-automation-testing.git"
+  },
+  "keywords": [
+    "appium",
+    "webdriverio",
+    "maestro",
+    "mobile-testing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aohymevoL666/mobile-automation-testing/issues"
+  },
+  "homepage": "https://github.com/aohymevoL666/mobile-automation-testing#readme"
+}

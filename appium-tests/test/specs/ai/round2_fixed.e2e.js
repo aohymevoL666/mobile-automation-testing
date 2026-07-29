@@ -8,7 +8,12 @@
 //   - "Product List" -> the home screen already shows "Danh sách sản phẩm"
 // Lesson: AI-generated flows must be verified against the actual application.
 // ============================================================================
-const { editText, tapText, waitTextContains, openLogin } = require("../native/helpers");
+const {
+  editText,
+  tapText,
+  waitTextContains,
+  openLogin,
+} = require("../../support/native");
 
 describe("EShop login and product list (AI-generated, fixed)", () => {
   it("logs in and shows the product list", async () => {

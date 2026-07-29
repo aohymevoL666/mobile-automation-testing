@@ -5,7 +5,7 @@ exports.config = {
   hostname: "127.0.0.1",
   port: 4723,
   path: "/",
-  specs: ["./tests/native/**/*.e2e.js"],
+  specs: ["./test/specs/native/**/*.e2e.js"],
   maxInstances: 1,
 
   capabilities: [{

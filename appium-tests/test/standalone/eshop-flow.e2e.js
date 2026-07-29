@@ -10,9 +10,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { remote } = require("webdriverio");
 
-const LoginPage = require("../pages/LoginPage");
-const HomePage = require("../pages/HomePage");
-const CartPage = require("../pages/CartPage");
+const LoginPage = require("../pageobjects/LoginPage");
+const HomePage = require("../pageobjects/HomePage");
+const CartPage = require("../pageobjects/CartPage");
 
 const config = {
   appPackage: process.env.APP_PACKAGE || "com.eshop.mobile",
@@ -82,7 +82,7 @@ async function runTest() {
     },
   });
 
-  const artifactsDir = path.resolve(__dirname, "../artifacts");
+  const artifactsDir = path.resolve(__dirname, "../../artifacts/screenshots");
   fs.mkdirSync(artifactsDir, { recursive: true });
 
   const login = new LoginPage(driver);

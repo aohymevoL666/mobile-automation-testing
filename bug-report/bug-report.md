@@ -36,7 +36,7 @@ increment-then-check order is correct; only the step size is wrong.
 shows only a generic failure message, hiding the lockout reason.
 
 **Evidence.** Reproduced end-to-end by the Appium test
-`appium-tests/tests/native/bugs.e2e.js`, which asserts a valid login succeeds
+`appium-tests/test/specs/native/bugs.e2e.js`, which asserts a valid login succeeds
 and therefore fails (red) on this defect. A clean first-attempt login passes,
 confirming the failure is the bug and not the test.
 
@@ -104,7 +104,7 @@ an existing item by product ID and increase its quantity; append a new row only
 when that product ID is not already present.
 
 **Evidence and regression coverage.** The Appium regression test
-`appium-tests/tests/native/cart.e2e.js` adds the same product twice and verifies
+`appium-tests/test/specs/native/cart.e2e.js` adds the same product twice and verifies
 that exactly one cart row exists with quantity `2`. Run it with:
 
 ```powershell

@@ -1,4 +1,4 @@
-const { byTextContains, relaunchApp } = require("./helpers");
+const { byTextContains, relaunchApp } = require("../../support/native");
 
 describe("Cart", () => {
   beforeEach(async () => {
