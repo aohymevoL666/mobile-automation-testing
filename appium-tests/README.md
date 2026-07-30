@@ -18,8 +18,7 @@ appium-tests/
 │   └── suites/                 # config cho từng nhóm test
 ├── test/
 │   ├── specs/
-│   │   ├── native/             # các luồng native viết thủ công
-│   │   ├── srs/                # test đối chiếu yêu cầu SRS
+│   │   ├── native/             # native flow và test SRS (tc-*.e2e.js)
 │   │   └── ai/                 # test sinh bởi AI và bản đã sửa
 │   ├── support/                # selector/helper dùng chung
 │   ├── pageobjects/            # Page Objects cho standalone flow
@@ -67,7 +66,7 @@ Hoặc từ `appium-tests` bằng các lệnh cùng tên. Chạy trực tiếp m
 
 ```powershell
 npm run wdio -- run ./config/suites/login.conf.js
-npm run wdio -- run ./config/suites/srs.conf.js --spec ./test/specs/srs/TC03-cart-merge-duplicate-product.e2e.js
+npm run wdio -- run ./config/suites/srs.conf.js --spec ./test/specs/native/tc-03-cart-merge-duplicate-product.e2e.js
 ```
 
 Các script standalone cũ vẫn được giữ lại:

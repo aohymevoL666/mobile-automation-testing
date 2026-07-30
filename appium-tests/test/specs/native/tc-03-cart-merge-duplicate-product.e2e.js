@@ -5,6 +5,11 @@ const {
   openCart,
 } = require("../../support/srs");
 
+/**
+ * @requirement FR-07
+ * @expected The same product occupies one cart row with quantity two.
+ * @detects Duplicate cart rows or a quantity that is not incremented.
+ */
 describe("TC-03 — duplicate product cart behavior", () => {
   it("merges the same product into one row with quantity two (FR-07)", async () => {
     const productId = await addFirstProduct();

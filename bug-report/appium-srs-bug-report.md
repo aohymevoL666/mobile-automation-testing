@@ -7,7 +7,7 @@
 | Requirement | FR-01, FR-22 |
 | Severity | Medium |
 | Status | Open |
-| Test | `TC01-registration-confirm-password.e2e.js` |
+| Test | `tc-01-registration-confirm-password.e2e.js` |
 
 **Steps:** Open the app, tap **Đăng nhập**, tap **Đăng ký ngay**, and inspect
 the registration fields.
@@ -28,7 +28,7 @@ state, input, or equality validation in `handleRegister`.
 | Requirement | FR-02 |
 | Severity | High |
 | Status | Open |
-| Test | `TC02-login-lockout-threshold.e2e.js` |
+| Test | `tc-02-login-lockout-threshold.e2e.js` |
 
 **Steps:** For a fresh account, enter a wrong password twice, relaunch the app,
 then enter the correct password.
@@ -43,24 +43,25 @@ already locked.
 moves `0 → 2 → 4` and reaches the `>= 3` threshold on the second failure. It
 also locks for 180 seconds although FR-02 specifies 30 seconds.
 
-## BUG-SRS-03 — editing quantity adds one to the entered value
+## BUG-SRS-03 — cart is missing the required quantity +/- controls
 
 | Field | Value |
 |---|---|
 | Requirement | FR-07 |
 | Severity | High |
 | Status | Open |
-| Test | `TC04-cart-quantity-edit.e2e.js` |
+| Test | `tc-04-cart-quantity-edit.e2e.js` |
 
-**Steps:** Add one product, open the cart, and type `2` after the initial
-quantity `1`.
+**Steps:** Add one product and open the cart.
 
-**Expected:** The field and cart calculations use the entered quantity `12`.
+**Expected:** The cart exposes `+` and `-` controls. Tapping `+` changes the
+quantity from `1` to `2` while retaining one product row.
 
-**Actual:** The field changes to `13`; totals are consequently calculated for
-thirteen units.
+**Actual:** The cart exposes a numeric text input instead of the required
+`+/-` controls, so the specified interaction is unavailable.
 
-**Cause:** The cart input handler assigns `parsed + 1` instead of `parsed`.
+**Cause:** The cart UI implements quantity editing with `TextInput` rather than
+the controls required by FR-07.
 
 ## BUG-SRS-04 — cart item is deleted without confirmation
 
@@ -69,7 +70,7 @@ thirteen units.
 | Requirement | FR-07 |
 | Severity | Medium |
 | Status | Open |
-| Test | `TC05-cart-delete-confirmation.e2e.js` |
+| Test | `tc-05-cart-delete-confirmation.e2e.js` |
 
 **Steps:** Add a product, open the cart, and tap **Xóa**.
 

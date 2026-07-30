@@ -5,6 +5,11 @@ const {
   tapText,
 } = require("../../support/native");
 
+/**
+ * @requirement FR-02
+ * @expected A correct password still works after only two failed attempts.
+ * @detects An account lockout that triggers before the third failed attempt.
+ */
 describe("TC-02 — account lockout threshold", () => {
   const password = "Valid1!Pass";
   const badPassword = "Wrong1!Pass";

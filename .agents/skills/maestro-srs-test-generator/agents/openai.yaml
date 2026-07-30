@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maestro SRS Test Generator"
+  short_description: "Generate traceable Maestro YAML tests from SRS"
+  default_prompt: "Use $maestro-srs-test-generator to turn mobile SRS requirements into traceable Maestro YAML flows that detect non-conforming behavior."
