@@ -1,6 +1,8 @@
 const LoginPage = require("../../pageobjects/LoginPage");
 const { relaunchApp } = require("../../support/native");
 
+// npx wdio run ./config/suites/srs.conf.js --spec ./test/specs/native/tc-01-registration-confirm-password.e2e.js
+
 let sequence = 0;
 const uniqueEmail = (label) =>
   `fr01.${label}.${Date.now()}.${sequence++}@example.com`;

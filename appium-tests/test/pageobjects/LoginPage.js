@@ -22,6 +22,18 @@ class LoginPage {
     return this.driver.$('android=new UiSelector().text("Sign In")');
   }
 
+  get loginError() {
+    return this.driver.$(
+      'android=new UiSelector().text("Đăng nhập thất bại. Vui lòng kiểm tra lại.")',
+    );
+  }
+
+  greeting(name) {
+    return this.driver.$(
+      `android=new UiSelector().text("Chào, ${name}")`,
+    );
+  }
+
   get registerLink() {
     return this.driver.$(
       'android=new UiSelector().textContains("Đăng ký ngay")',
